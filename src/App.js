@@ -19,7 +19,8 @@ class App extends Component {
     this.makeGameBoard = this.makeGameBoard.bind(this);
     this.makeMove = this.makeMove.bind(this);
     this.togglePlayer = this.togglePlayer.bind(this);
-    // this.checkGame = this.checkGame.bind(this);
+    this.checkGame = this.checkGame.bind(this);
+    this.cellExists = this.cellExists.bind(this);
   }
 
   makeBoard() {
@@ -66,22 +67,91 @@ class App extends Component {
     }
     if (col < 0 || col > 6) {
       return false;
-    }
+    } else return true;
   }
 
   checkGame(row, col) {
     // checking row
-    let count1 = 0;
+    let rowCount = 0;
     for (let i = col - 3; i <= col + 3; i++) {
-      if (this.cellExists(this.state.board(row, i))) {
+      if (this.cellExists(row, i)) {
         if (this.state.board[row][i] === this.state.player) {
-          count1++;
+          rowCount++;
+          if (rowCount === 4) break;
         } else {
-          count1 = 0;
+          rowCount = 0;
         }
       }
     }
     // checking col
+    let colCount = 0;
+    for (let i = row - 3; i <= row + 3; i++) {
+      if (this.cellExists(i, col)) {
+        if (this.state.board[i][col] === this.state.player) {
+          colCount++;
+          if (colCount === 4) break;
+        } else {
+          colCount = 0;
+        }
+      }
+    }
+    // checking diag1
+    let diag1count = 0;
+    let cells = [
+      [+row - 3, +col - 3],
+      [+row - 2, +col - 2],
+      [+row - 1, +col - 1],
+      [+row, +col],
+      [+row + 1, +col + 1],
+      [+row + 2, +col + 2],
+      [+row + 3, +col + 3]
+    ];
+    for (let i = 0; i < cells.length; i++) {
+      let cell = cells[i];
+      if (this.cellExists(cell[0], cell[1])) {
+        if (this.state.board[cell[0]][cell[1]] === this.state.player) {
+          diag1count++;
+          if (diag1count === 4) break;
+        } else {
+          diag1count = 0;
+        }
+      }
+    }
+    // checking diag2
+    let diag2count = 0;
+    let secondCells = [
+      [+row + 3, +col - 3],
+      [+row + 2, +col - 2],
+      [+row + 1, +col - 1],
+      [+row, +col],
+      [+row - 1, +col + 1],
+      [+row - 2, +col + 2],
+      [+row - 3, +col + 3]
+    ];
+    for (let i = 0; i < secondCells.length; i++) {
+      let cell = secondCells[i];
+      if (this.cellExists(cell[0], cell[1])) {
+        if (this.state.board[cell[0]][cell[1]] === this.state.player) {
+          diag2count++;
+          if (diag2count === 4) break;
+        } else {
+          diag2count = 0;
+        }
+      }
+    }
+    console.log(
+      "column count: ",
+      colCount,
+      "row count: ",
+      rowCount,
+      "diag1 count: ",
+      diag1count,
+      "diag2 count: ",
+      diag2count
+    );
+    if (colCount >= 4 || rowCount >= 4 || diag1count >= 4 || diag2count >= 4) {
+      alert(`Player ${this.state.player} wins!`);
+    }
   }
 
   componentDidMount() {
@@ -108,10 +178,10 @@ class App extends Component {
       alert("That column is full!");
     } else {
       selectedCol[0].classList.add(fill);
+      this.state.moves[this.state.player]++;
       this.togglePlayer();
     }
-    this.state.moves[this.state.player]++;
-    console.log(this.state.board);
+    console.log(this.state.board, this.state.moves);
     if (this.state.moves[this.state.player] >= 4) {
       this.checkGame(row, col);
     }
