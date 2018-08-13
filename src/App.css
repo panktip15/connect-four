@@ -30,10 +30,12 @@ td {
 
 .red {
   background-color: red;
+  border-radius: 50%;
 }
 
 .blue {
   background-color: blue;
+  border-radius: 50%;
 }
 
 /* @keyframes App-logo-spin {
