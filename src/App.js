@@ -1,8 +1,5 @@
-import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import { move } from "./store";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import './App.css';
 
 class App extends Component {
   constructor() {
@@ -11,9 +8,9 @@ class App extends Component {
       board: this.makeBoard(),
       player: 1,
       moves: {
-        "1": 0,
-        "2": 0
-      }
+        1: 0,
+        2: 0,
+      },
     };
     this.makeBoard = this.makeBoard.bind(this);
     this.makeGameBoard = this.makeGameBoard.bind(this);
@@ -21,6 +18,7 @@ class App extends Component {
     this.togglePlayer = this.togglePlayer.bind(this);
     this.checkGame = this.checkGame.bind(this);
     this.cellExists = this.cellExists.bind(this);
+    this.gameReset = this.gameReset.bind(this);
   }
 
   makeBoard() {
@@ -39,13 +37,13 @@ class App extends Component {
     const tds = [];
 
     // <table> element
-    const table = document.createElement("tbody");
+    const table = document.createElement('tbody');
     // build a table row <tr>
     for (let h = 0; h < 6; h++) {
-      const tr = document.createElement("tr");
+      const tr = document.createElement('tr');
       // build a table column <td>
       for (let w = 0; w < 7; w++) {
-        const td = document.createElement("td");
+        const td = document.createElement('td');
         // We'll put the coordinates on the cell
         // Element itself (using dataset),
         // letting us fetch it in a click listener later.
@@ -58,7 +56,7 @@ class App extends Component {
       }
       table.append(tr);
     }
-    document.getElementById("board").append(table);
+    document.getElementById('board').append(table);
   }
 
   cellExists(row, col) {
@@ -104,7 +102,7 @@ class App extends Component {
       [+row, +col],
       [+row + 1, +col + 1],
       [+row + 2, +col + 2],
-      [+row + 3, +col + 3]
+      [+row + 3, +col + 3],
     ];
     for (let i = 0; i < cells.length; i++) {
       let cell = cells[i];
@@ -126,7 +124,7 @@ class App extends Component {
       [+row, +col],
       [+row - 1, +col + 1],
       [+row - 2, +col + 2],
-      [+row - 3, +col + 3]
+      [+row - 3, +col + 3],
     ];
     for (let i = 0; i < secondCells.length; i++) {
       let cell = secondCells[i];
@@ -139,18 +137,9 @@ class App extends Component {
         }
       }
     }
-    console.log(
-      "column count: ",
-      colCount,
-      "row count: ",
-      rowCount,
-      "diag1 count: ",
-      diag1count,
-      "diag2 count: ",
-      diag2count
-    );
     if (colCount >= 4 || rowCount >= 4 || diag1count >= 4 || diag2count >= 4) {
       alert(`Player ${this.state.player} wins!`);
+      this.gameReset();
     }
   }
 
@@ -160,7 +149,7 @@ class App extends Component {
 
   makeMove(event) {
     let fill;
-    this.state.player === 1 ? (fill = "red") : (fill = "blue");
+    this.state.player === 1 ? (fill = 'red') : (fill = 'blue');
     let row;
     let col = event.target.dataset.col;
     let i = 5;
@@ -175,13 +164,12 @@ class App extends Component {
     }
     const selectedCol = document.getElementsByClassName(`${row}${col}`);
     if (selectedCol[0] === undefined) {
-      alert("That column is full!");
+      alert('That column is full!');
     } else {
       selectedCol[0].classList.add(fill);
       this.state.moves[this.state.player]++;
       this.togglePlayer();
     }
-    console.log(this.state.board, this.state.moves);
     if (this.state.moves[this.state.player] >= 4) {
       this.checkGame(row, col);
     }
@@ -193,26 +181,24 @@ class App extends Component {
       : this.setState({ player: 1 });
   }
 
+  gameReset() {
+    this.setState({
+      board: this.makeBoard(),
+    });
+  }
+
   render() {
     return (
       <div className="App">
+        <div className="title">Connect Four</div>
+        <div className="player">Player: {this.state.player}</div>
+        {/* <button type="submit" onClick={this.gameReset}>
+          Reset
+        </button> */}
         <div id="board" onClick={this.makeMove} />
       </div>
     );
   }
 }
-
-// const mapState = state => {
-//   return {
-//     player: state.player,
-//     row: state.row
-//   };
-// };
-
-// const mapDispatch = dispatch => {
-//   return {
-//     makeMove: (player, row) => dispatch(move(player, row))
-//   };
-// };
 
 export default App;
