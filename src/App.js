@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 
+// Actual table cells
+const tds = [];
+
 class App extends Component {
   constructor() {
     super();
@@ -34,8 +37,6 @@ class App extends Component {
   }
 
   makeGameBoard() {
-    const tds = [];
-
     // <table> element
     const table = document.createElement('tbody');
     // build a table row <tr>
@@ -149,7 +150,7 @@ class App extends Component {
 
   makeMove(event) {
     let fill;
-    this.state.player === 1 ? (fill = 'red') : (fill = 'blue');
+    this.state.player === 1 ? (fill = 'red') : (fill = 'yellow');
     let row;
     let col = event.target.dataset.col;
     let i = 5;
@@ -185,16 +186,26 @@ class App extends Component {
     this.setState({
       board: this.makeBoard(),
     });
+    tds.forEach(td => {
+      td.classList.remove('red', 'yellow');
+    });
   }
 
   render() {
     return (
       <div className="App">
         <div className="title">Connect Four</div>
-        <div className="player">Player: {this.state.player}</div>
-        {/* <button type="submit" onClick={this.gameReset}>
-          Reset
-        </button> */}
+        <div>
+          <div className="player">Player: {this.state.player}</div>
+          <button
+            type="submit"
+            className="btn btn-dark"
+            onClick={this.gameReset}
+          >
+            Reset
+          </button>
+        </div>
+        <br />
         <div id="board" onClick={this.makeMove} />
       </div>
     );
