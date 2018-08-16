@@ -189,6 +189,7 @@ class App extends Component {
     tds.forEach(td => {
       td.classList.remove('red', 'yellow');
     });
+    this.state.player = 1;
   }
 
   render() {
