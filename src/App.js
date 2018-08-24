@@ -22,6 +22,7 @@ class App extends Component {
     this.checkGame = this.checkGame.bind(this);
     this.cellExists = this.cellExists.bind(this);
     this.gameReset = this.gameReset.bind(this);
+    this.popup = this.popup.bind(this);
   }
 
   makeBoard() {
@@ -139,9 +140,13 @@ class App extends Component {
       }
     }
     if (colCount >= 4 || rowCount >= 4 || diag1count >= 4 || diag2count >= 4) {
-      alert(`Player ${this.state.player} wins!`);
-      this.gameReset();
+      this.popup();
     }
+  }
+
+  popup() {
+    let pop = document.getElementById('myPopup');
+    pop.classList.toggle('show');
   }
 
   componentDidMount() {
@@ -190,6 +195,8 @@ class App extends Component {
       td.classList.remove('red', 'yellow');
     });
     this.state.player = 1;
+    let pop = document.getElementById('myPopup');
+    pop.classList.remove('show');
   }
 
   render() {
@@ -205,6 +212,19 @@ class App extends Component {
           >
             Reset
           </button>
+        </div>
+        <div className="popup">
+          <span className="popuptext" id="myPopup">
+            {`Player ${this.state.player} wins!`}
+            <br/>
+            <button
+            type="submit"
+            className="btn btn-dark"
+            onClick={this.gameReset}
+          >
+            Reset
+          </button>
+          </span>
         </div>
         <br />
         <div id="board" onClick={this.makeMove} />
