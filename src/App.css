@@ -64,9 +64,9 @@ td {
 
 /* Popup container */
 .popup {
-  position: absolute;
-  display: inline-block;
-  cursor: pointer;
+  display:flex;
+  justify-content: center;
+  align-self: auto;
 }
 
 /* The actual popup (appears on top) */
@@ -78,7 +78,7 @@ td {
   font-size: 40px;
   text-align: center;
   border-radius: 6px;
-  padding: 8px 0;
+  padding: 8px;
   position: absolute;
   z-index: 1;
 }
